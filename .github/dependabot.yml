@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # Keep the one runtime dependency (commander) current.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # Keep the GitHub Actions used by CI current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

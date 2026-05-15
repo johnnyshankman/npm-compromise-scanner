@@ -187,3 +187,14 @@ Database, and npm security advisories.
 - Matching is exact `name@version`. It does not evaluate semver ranges in
   `package.json`; that is what the lockfile / `node_modules` passes are
   for.
+
+## Contributing & security
+
+Contributions go through pull requests against the protected `main`
+branch — see [CONTRIBUTING.md](CONTRIBUTING.md). CI runs the test suite on
+Linux, macOS, and Windows; all checks must pass before merge.
+
+To report a security issue, see [SECURITY.md](SECURITY.md) — please do not
+file security problems as public issues.
+
+This project is [MIT licensed](LICENSE).
