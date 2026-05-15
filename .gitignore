@@ -1,0 +1,13 @@
+# Incident CSVs dropped at the repo root are inputs, not part of the tool.
+# The reference CSV under examples/ is intentionally tracked.
+/*.csv
+
+# Saved scan output
+/scan-output*.txt
+*.log
+
+# Node
+node_modules/
+
+# macOS
+.DS_Store
