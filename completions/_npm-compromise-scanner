@@ -1,0 +1,19 @@
+#compdef npm-compromise-scanner
+# zsh completion for npm-compromise-scanner
+#
+# Install: place this file (named "_npm-compromise-scanner") in a directory
+# on your $fpath, e.g.:
+#   mkdir -p ~/.zsh/completions
+#   cp completions/_npm-compromise-scanner ~/.zsh/completions/
+# then in ~/.zshrc, before `compinit`:
+#   fpath=(~/.zsh/completions $fpath)
+#   autoload -Uz compinit && compinit
+
+_arguments -s \
+  '--skip-node-modules[scan only manifests/lockfiles, not installed node_modules]' \
+  '--json[emit machine-readable JSON to stdout]' \
+  '--no-color[disable colored output]' \
+  '(-h --help)'{-h,--help}'[show help]' \
+  '(-V --version)'{-V,--version}'[show version]' \
+  '1:directory to scan:_files -/' \
+  '2:affected-packages CSV:_files -g "*.csv"'

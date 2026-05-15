@@ -1,0 +1,9 @@
+{
+  "name": "clean-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "_comment": "Static test fixture for npm-compromise-scanner. Declares only safe packages - the scanner should report this tree as clean.",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

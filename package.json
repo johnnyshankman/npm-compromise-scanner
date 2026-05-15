@@ -1,16 +1,20 @@
 {
   "name": "npm-compromise-scanner",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Scan a directory tree for npm packages compromised in a supply-chain incident, given a CSV of affected packages.",
   "bin": {
     "npm-compromise-scanner": "scan.js"
   },
   "scripts": {
-    "scan": "node scan.js"
+    "scan": "node scan.js",
+    "test": "node --test"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20.0.0"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "commander": "^14.0.3"
+  }
 }

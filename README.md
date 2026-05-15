@@ -39,16 +39,34 @@ lockfile can drift from what is actually installed. This scanner checks
 
 ## Requirements
 
-Node.js (any reasonably recent version). Zero dependencies — pure stdlib.
+Node.js **>= 20**.
+
+## Setup
+
+One runtime dependency — [`commander`](https://github.com/tj/commander.js),
+for argument parsing. Install it once:
+
+```bash
+npm install
+```
+
+Optionally, expose the `npm-compromise-scanner` command on your `PATH`
+(also what the shell completions below hook into):
+
+```bash
+npm link
+```
 
 ## Usage
 
 The tool takes exactly two arguments — the folder to scan and the CSV of
-affected packages. Both are required; there are no defaults. It exits
-with an error if either is missing.
+affected packages. Both are required; there are no defaults.
 
 ```bash
 node scan.js <folder-to-scan> <affected-packages.csv> [options]
+
+# or, after `npm link`:
+npm-compromise-scanner <folder-to-scan> <affected-packages.csv> [options]
 ```
 
 Examples:
@@ -57,20 +75,63 @@ Examples:
 # Scan a project tree against the bundled reference CSV
 node scan.js /path/to/your/project ./examples/22-packages.csv
 
-# Skip the (slow) installed-node_modules pass
+# Faster run — skip the installed-node_modules pass
 node scan.js /path/to/your/project ./examples/22-packages.csv --skip-node-modules
+
+# Machine-readable output for automation / CI
+node scan.js /path/to/your/project ./examples/22-packages.csv --json
 ```
 
 Options:
 
 - `--skip-node-modules` — scan only manifests/lockfiles, not installed `node_modules`
-- `--help`, `-h` — show usage
+- `--json` — emit machine-readable JSON to stdout instead of the human report
+- `--no-color` — disable colored output (color is auto-disabled when stdout
+  is not a TTY, or when `NO_COLOR` is set)
+- `-V, --version` — print the version
+- `-h, --help` — show usage
+
+The human-readable report is written to **stdout**; progress and
+diagnostics go to **stderr**, so `… > report.txt` captures just the report
+and `… | grep HIT` works cleanly.
 
 Exit codes (so it can be wired into CI / automation):
 
 - `0` — clean, no confirmed compromised package found
 - `1` — one or more confirmed compromised `name@version` present
-- `2` — usage / input error (missing folder or missing CSV)
+- `2` — usage error (bad or missing arguments)
+- `77` — permission denied reading the folder or CSV
+- `130` — interrupted (Ctrl+C)
+
+## Shell completions
+
+Completion scripts for the `npm-compromise-scanner` command live in
+[`completions/`](completions/). Each file's header has full install
+instructions; the short version:
+
+```bash
+# bash — source it from ~/.bashrc
+source completions/npm-compromise-scanner.bash
+
+# zsh — drop it on your $fpath, then recompinit
+cp completions/_npm-compromise-scanner ~/.zsh/completions/
+
+# fish
+cp completions/npm-compromise-scanner.fish ~/.config/fish/completions/
+```
+
+## Testing
+
+```bash
+npm test
+```
+
+Runs the built-in Node.js test runner (`node --test`) against
+[`test/cli.test.js`](test/cli.test.js) — version/help output, argument
+validation, exit codes, clean vs. compromised detection, and JSON mode.
+The fixtures under `test/fixtures/` are static; the "compromised" fixture
+deliberately names a known-bad package version (with no `package.json`
+beside it, so it can never be installed).
 
 ## CSV format
 
@@ -105,6 +166,10 @@ real incident CSV in exactly this format — use it as a template.
   necessarily compromised; cross-check against the resolved version in
   the lockfile / `node_modules` (the scanner does this automatically when
   those are present).
+
+With `--json`, the same information is emitted as a structured object
+(`outcome`, `confirmed[]`, `nameMatches[]`, `scanned`, `parseErrors`, …)
+for programmatic use.
 
 ## Getting a CSV for a new incident
 
